@@ -1,0 +1,18 @@
+services:
+  db:
+    container_name: database-container-m2
+    build:
+      context: ./database
+      dockerfile: Dockerfile
+    platform: linux/amd64
+    healthcheck:
+      test: ["CMD", "mysqladmin" ,"ping", "-h", "localhost"]
+      timeout: 10s
+      retries: 10
+    expose:
+      - 3306
+    volumes:
+      - ./database/db:/var/lib/mysql
+      - ./database/init.sql:/docker-entrypoint-initdb.d/init.sql
+    env_file:
+      - .env
